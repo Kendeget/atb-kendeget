@@ -808,8 +808,12 @@ const IC = {
 };
 
 /* ── FETCH & BUILD ── */
+function apiFetch(url){
+  return fetch(url, { headers: { 'Accept-Language': lang.toLowerCase() } });
+}
+
 async function fetchRegions(){
-  const res = await fetch(`${API_BASE}/regions`);
+  const res = await apiFetch(`${API_BASE}/regions`);
   if(!res.ok) throw new Error('HTTP '+res.status);
   const j = await res.json();
   regionsList = (j.data || [])
@@ -821,7 +825,7 @@ async function fetchAllListings(){
   const regionParam = state.regionId ? `&regions=${encodeURIComponent(state.regionId)}` : '';
   let page=1, last=1; const all=[];
   do {
-    const res = await fetch(`${API_BASE}/listings?status=accepted&page=${page}&per_page=50${regionParam}`);
+    const res = await apiFetch(`${API_BASE}/listings?status=accepted&page=${page}&per_page=50${regionParam}`);
     if(!res.ok) throw new Error('HTTP '+res.status);
     const j = await res.json(); const d = j.data || {};
     all.push(...(d.data||[]));
@@ -834,7 +838,7 @@ async function fetchAllPartners(){
   const regionParam = state.regionId ? `&regions=${encodeURIComponent(state.regionId)}` : '';
   let page=1, last=1; const all=[];
   do {
-    const res = await fetch(`${API_BASE}/users/partners?page=${page}&per_page=50${regionParam}`);
+    const res = await apiFetch(`${API_BASE}/users/partners?page=${page}&per_page=50${regionParam}`);
     if(!res.ok) throw new Error('HTTP '+res.status);
     const j = await res.json(); const d = j.data || {};
     all.push(...(d.data||[]));
@@ -1119,6 +1123,10 @@ document.getElementById('lang-dropdown').querySelectorAll('.lang-opt').forEach(b
     btn.classList.add('active');
     langWrap.classList.remove('open');
     applyLang();
+    if(dataReady){
+      fetchRegions().then(populateRegions).catch(()=>{});
+      reloadData();
+    }
   });
 });
 document.addEventListener('click', e=>{ if(!langWrap.contains(e.target)) langWrap.classList.remove('open'); });
