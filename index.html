@@ -647,6 +647,24 @@
         </div>
       </div>
 
+      <!-- HOTELS filters -->
+      <div class="filter-group" id="fg-hotels">
+        <div class="fg">
+          <label>
+            <svg class="fg-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7">
+              <path d="M4 2v12M4 14l-2.5-2.5M4 2l2.5 2.5"/>
+              <path d="M12 14V2M12 2l2.5 2.5M12 14l-2.5-2.5"/>
+            </svg>
+            <span data-i18n="sortBy">Sıralama</span>
+          </label>
+          <select id="f-hotel-sort">
+            <option value=""           data-i18n="sortRecommended">Tövsiyə olunan</option>
+            <option value="price-asc"  data-i18n="sortPriceAsc">Qiymət: ucuzdan</option>
+            <option value="price-desc" data-i18n="sortPriceDesc">Qiymət: bahadan</option>
+          </select>
+        </div>
+      </div>
+
       <!-- Reset -->
       <div class="btn-reset-wrap">
         <button class="btn-reset" id="btn-reset" data-i18n="reset">Sıfırla</button>
@@ -670,6 +688,13 @@
             <circle cx="8" cy="5.5" r="3"/><path d="M2 14.5c0-3.3 2.7-6 6-6s6 2.7 6 6"/>
           </svg>
           <span data-i18n="tabGuides">Bələdçilər</span>
+        </button>
+        <button class="tab-item" data-section="hotels">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6">
+            <rect x="2" y="2" width="12" height="12" rx="1.2"/>
+            <path d="M2 7h12M6 7v7M6 10h4"/>
+          </svg>
+          <span data-i18n="tabHotels">Butik Otellər</span>
         </button>
       </div>
       <div class="view-toggle">
@@ -702,7 +727,7 @@
 /* ── i18n ── */
 const T = {
   AZ: {
-    tabGuides: 'Bələdçilər', tabHouses: 'Evlər', sortBy: 'Sıralama',
+    tabGuides: 'Bələdçilər', tabHouses: 'Evlər', tabHotels: 'Butik Otellər', sortBy: 'Sıralama',
     heroTitle: 'Azerbaijan.travel Tərəfdaş İnteqrasiya Proqramı',
     heroSub: 'Azerbaijan.travel Tərəfdaş İnteqrasiya Proqramı seçilmiş turizm sənayesi nümayəndələrini Azerbaijan.travel platforması ilə bir araya gətirərək turistlər üçün məlumat əldə etmə və rezervasiya prosesini daha rahat edir. Proqrama qoşulan tərəfdaşlar öz rezervasiya sistemləri vasitəsilə turlar, təcrübələr və yerləşmə xidmətləri üzrə birbaşa rezervasiya imkanı təqdim edirlər. Bu inteqrasiya sayəsində siz seçdiyiniz xidməti müvafiq xidmət təminatçısı üzərindən rahat şəkildə rezervasiya edə bilərsiniz. Rezervasiya, təsdiqləmə, ödəniş və xidmətlə bağlı digər məsələlər birbaşa seçilmiş turizm məhsulunu təqdim edən xidmət təminatçısı tərəfindən idarə olunur.',
     location: 'Məkan', allLoc: 'Bütün məkanlar',
@@ -728,10 +753,11 @@ const T = {
     loading: 'Yüklənir…', loadError: 'Məlumat yüklənmədi',
     noCapacity: 'Adam sayı qeyd edilməyib', maxPrefix: 'maks.',
     unitHouse: 'ev', unitHouses: 'ev', unitTour: 'tur', unitTours: 'tur',
+    startingFrom: 'başlayaraq',
     sortRecommended: 'Tövsiyə olunan', sortPriceAsc: 'Qiymət: ucuzdan', sortPriceDesc: 'Qiymət: bahadan',
   },
   EN: {
-    tabGuides: 'Guides', tabHouses: 'Houses', sortBy: 'Sort',
+    tabGuides: 'Guides', tabHouses: 'Houses', tabHotels: 'Boutique Hotels', sortBy: 'Sort',
     heroTitle: 'Azerbaijan.travel Partner Integration Programme',
     heroSub: 'The Azerbaijan.travel Partner Integration Programme brings selected tourism industry representatives together with the Azerbaijan.travel platform, making the process of finding information and booking services easier for travellers. Partners participating in the programme offer direct booking opportunities for tours, experiences, and accommodation services through their own reservation systems. Through this integration, you can conveniently reserve your selected service directly through the relevant service provider. All bookings, confirmations, payments, and other service-related matters are handled directly by the service provider offering the selected tourism product.',
     location: 'Location', allLoc: 'All locations',
@@ -757,6 +783,7 @@ const T = {
     loading: 'Loading…', loadError: 'Could not load data',
     noCapacity: 'Capacity not specified', maxPrefix: 'max',
     unitHouse: 'house', unitHouses: 'houses', unitTour: 'tour', unitTours: 'tours',
+    startingFrom: 'from',
     sortRecommended: 'Recommended', sortPriceAsc: 'Price: low to high', sortPriceDesc: 'Price: high to low',
   }
 };
@@ -770,6 +797,7 @@ const STORAGE  = 'https://admin.kendeget.com/storage/';
 /* ── DATA STORES ── */
 let houses = [];
 let guides = [];
+let hotels = [];
 let regionsList = [];   // [{id, title}] from /api/regions
 let dataReady = false;
 
@@ -780,6 +808,7 @@ const state = {
   regionId: '',          // shared — sent to backend as ?regions={id}
   houses: { people:'', sort:'', page:1 },
   guides: { cat:'', page:1 },
+  hotels: { sort:'', page:1 },
 };
 let categoriesList = [];   // union of guide categories (for the İxtisas filter)
 
@@ -834,6 +863,19 @@ async function fetchAllListings(){
   return all;
 }
 
+async function fetchAllHotels(){
+  const regionParam = state.regionId ? `&regions=${encodeURIComponent(state.regionId)}` : '';
+  let page=1, last=1; const all=[];
+  do {
+    const res = await apiFetch(`${API_BASE}/hotels?status=accepted&page=${page}&per_page=50${regionParam}`);
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const j = await res.json(); const d = j.data || {};
+    all.push(...(d.data||[]));
+    last = d.last_page || 1; page++;
+  } while(page<=last);
+  return all;
+}
+
 async function fetchAllPartners(){
   const regionParam = state.regionId ? `&regions=${encodeURIComponent(state.regionId)}` : '';
   let page=1, last=1; const all=[];
@@ -852,9 +894,10 @@ async function reloadData(){
   grid.innerHTML = `<div class="loading-wrap"><div class="spinner"></div><div>${t().loading}</div></div>`;
   pagEl.innerHTML = '';
   try {
-    const [listings, partners] = await Promise.all([fetchAllListings(), fetchAllPartners()]);
+    const [listings, partners, hotelList] = await Promise.all([fetchAllListings(), fetchAllPartners(), fetchAllHotels()]);
     buildHouses(listings);
     buildGuides(partners);
+    buildHotels(hotelList);
     renderCards();
   } catch(err){
     grid.innerHTML = `<div class="empty"><div class="ico">⚠️</div><h3>${t().loadError}</h3><p>${esc(err.message)}</p></div>`;
@@ -873,6 +916,16 @@ function buildHouses(listings){
     rating: num(l.rating),
     reviewCount: l.reviews_count || 0,
     host: (l.user && l.user.name) || '',
+  }));
+}
+
+function buildHotels(listings){
+  hotels = listings.map(l => ({
+    id: l.id,
+    title: l.title || '',
+    region: (l.region && l.region.title) || '',
+    image: (l.images && l.images.length) ? STORAGE + l.images[0] : '',
+    startingPrice: l.starting_price ? Math.round(num(l.starting_price)) : null,
   }));
 }
 
@@ -905,6 +958,13 @@ function getFiltered(){
     });
     if(s.sort==='price-asc')  arr = arr.slice().sort((a,b)=>a.price-b.price);
     else if(s.sort==='price-desc') arr = arr.slice().sort((a,b)=>b.price-a.price);
+    return arr;
+  }
+  if(activeSection==='hotels'){
+    const s = state.hotels;
+    let arr = hotels.slice();
+    if(s.sort==='price-asc')  arr.sort((a,b)=>(a.startingPrice||0)-(b.startingPrice||0));
+    else if(s.sort==='price-desc') arr.sort((a,b)=>(b.startingPrice||0)-(a.startingPrice||0));
     return arr;
   }
   const s = state.guides;
@@ -941,6 +1001,28 @@ function houseCard(h){
           ${h.region ? `<div class="meta-row">${IC.pin} ${esc(h.region)}</div>` : ''}
           <div class="meta-row">${IC.ppl} ${h.capacity ? `${t().maxPrefix} ${h.capacity} ${t().person}` : t().noCapacity}</div>
           ${last}
+        </div>
+      </div>
+    </div>`;
+}
+
+function hotelCard(h){
+  const priceVal = h.startingPrice ? `${t().startingFrom} ₼${h.startingPrice}` : '';
+  const img = h.image
+    ? `<img src="${esc(h.image)}" alt="${esc(h.title)}" loading="lazy" onerror="this.style.display='none'"/>`
+    : '';
+  return `
+    <div class="tour-card" onclick="window.open('https://kendeget.com/hotel/${h.id}','_blank','noopener')">
+      <div class="card-img type-villa">
+        ${img}
+        <div class="card-img-ov"></div>
+        ${h.region ? `<span class="badge-cat">${esc(h.region)}</span>` : ''}
+        ${priceVal ? `<span class="badge-price price-paid">${priceVal}</span>` : ''}
+      </div>
+      <div class="card-body">
+        <div class="card-title">${esc(h.title)}</div>
+        <div class="card-meta">
+          ${h.region ? `<div class="meta-row">${IC.pin} ${esc(h.region)}</div>` : ''}
         </div>
       </div>
     </div>`;
@@ -991,7 +1073,7 @@ function renderCards(){
     renderPagination(0,1); return;
   }
   const slice = filtered.slice((st.page-1)*PER_PAGE, st.page*PER_PAGE);
-  const fn = activeSection==='houses' ? houseCard : guideCard;
+  const fn = activeSection==='houses' ? houseCard : activeSection==='hotels' ? hotelCard : guideCard;
   grid.innerHTML = slice.map(fn).join('');
   renderPagination(total, pages);
 }
@@ -1029,6 +1111,7 @@ function switchSection(section){
   document.querySelectorAll('.tab-item').forEach(el => el.classList.toggle('active', el.dataset.section === section));
   document.getElementById('fg-houses').classList.toggle('visible', section === 'houses');
   document.getElementById('fg-guides').classList.toggle('visible', section === 'guides');
+  document.getElementById('fg-hotels').classList.toggle('visible', section === 'hotels');
   updateHeader();
   renderCards();
 }
@@ -1065,6 +1148,7 @@ document.getElementById('f-loc').addEventListener('change', e=>{
 document.getElementById('f-people').addEventListener('change', e=>{ state.houses.people=e.target.value; state.houses.page=1; renderCards(); });
 document.getElementById('f-sort').addEventListener('change', e=>{ state.houses.sort=e.target.value; state.houses.page=1; renderCards(); });
 document.getElementById('f-gcat').addEventListener('change', e=>{ state.guides.cat=e.target.value; state.guides.page=1; renderCards(); });
+document.getElementById('f-hotel-sort').addEventListener('change', e=>{ state.hotels.sort=e.target.value; state.hotels.page=1; renderCards(); });
 
 /* ── RESET ── */
 document.getElementById('btn-reset').addEventListener('click', ()=>{
@@ -1072,10 +1156,12 @@ document.getElementById('btn-reset').addEventListener('click', ()=>{
   state.regionId = '';
   Object.assign(state.houses, {people:'',sort:'',page:1});
   Object.assign(state.guides, {cat:'',page:1});
+  Object.assign(state.hotels, {sort:'',page:1});
   document.getElementById('f-loc').value='';
   document.getElementById('f-people').value='';
   document.getElementById('f-sort').value='';
   document.getElementById('f-gcat').value='';
+  document.getElementById('f-hotel-sort').value='';
   if(hadRegion) reloadData(); else renderCards();
 });
 
@@ -1138,9 +1224,10 @@ async function init(){
   // Regions dropdown (independent — don't block content if it fails)
   fetchRegions().then(populateRegions).catch(()=>{});
   try {
-    const [listings, partners] = await Promise.all([fetchAllListings(), fetchAllPartners()]);
+    const [listings, partners, hotelList] = await Promise.all([fetchAllListings(), fetchAllPartners(), fetchAllHotels()]);
     buildHouses(listings);
     buildGuides(partners);
+    buildHotels(hotelList);
     dataReady = true;
     renderCards();
   } catch(err){
