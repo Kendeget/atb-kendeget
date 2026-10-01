@@ -345,6 +345,8 @@
     .card-meta { display: flex; flex-direction: column; gap: 7px; margin-top: auto; }
     .meta-row { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--g600); }
     .meta-row svg { width: 14px; height: 14px; flex-shrink: 0; color: var(--g600); }
+    .card-price { font-size: 16px; font-weight: 800; color: #FF595A; margin-top: 4px; }
+    .card-price span { font-size: 12px; font-weight: 500; color: var(--g400); }
 
     /* ── GUIDE CARD specifics ── */
     .guide-rating { display: flex; align-items: center; gap: 5px; margin-bottom: 10px; }
@@ -1001,6 +1003,7 @@ function houseCard(h){
           ${h.region ? `<div class="meta-row">${IC.pin} ${esc(h.region)}</div>` : ''}
           <div class="meta-row">${IC.ppl} ${h.capacity ? `${t().maxPrefix} ${h.capacity} ${t().person}` : t().noCapacity}</div>
           ${last}
+          ${h.price ? `<div class="card-price">${priceVal}<span>${t().perNight}</span></div>` : ''}
         </div>
       </div>
     </div>`;
