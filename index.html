@@ -4,527 +4,386 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Partner Integration Program — ATB Partners</title>
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --navy:  #3C1053; --blue: #7B3FAB; --lblue: #F0E8FA;
-      --accent:#f59e0b; --bg: #F8F8F8; --white: #ffffff;
-      --g100: #F5F5F5; --g200: #E0E0E0; --g400: #A0A0A0;
-      --g600: #505050; --g800: #222222;
-      --sh: 0 2px 14px rgba(0,0,0,.07);
-      --sh2: 0 10px 36px rgba(0,0,0,.12);
-      --r: 13px; --rs: 8px;
+      /* kendeget brand tokens */
+      --green: #038768; --green-d: #026D53; --green-l: #F0FDF9;
+      --lime: #B3FF1F; --red: #FF385B;
+      --text: #282828; --muted: #777E90; --muted2: #5C6273;
+      --border: #E6E8EC; --soft: #F8F8F8; --soft2: #E8E8E8; --white: #ffffff;
+      --sh-card: 0 8px 24px rgba(0,0,0,.08);
+      --sh-card-h: 0 12px 32px rgba(0,0,0,.12);
+      --font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
     html, body { overflow-x: hidden; max-width: 100%; }
-    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--g800); min-height: 100vh; }
+    body { font-family: var(--font); background: var(--white); color: var(--text); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+    button, select, input { font-family: inherit; }
+    a { color: inherit; }
+    button:focus-visible, select:focus-visible, a:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+    .wrap { width: 100%; max-width: 1216px; margin: 0 auto; }
 
     /* ── NAVBAR ── */
-    nav {
-      background: rgba(255,255,255,.65);
-      backdrop-filter: blur(18px) saturate(180%);
-      -webkit-backdrop-filter: blur(18px) saturate(180%);
-      border-bottom: 1px solid rgba(255,255,255,.5);
-      box-shadow: 0 2px 16px rgba(60,16,83,.08);
-      position: sticky; top: 0; z-index: 200;
-    }
+    .nav-outer { padding: 8px 16px 0; position: relative; z-index: 200; }
     .nav-inner {
-      max-width: 1440px; margin: 0 auto; padding: 0 28px; height: 64px;
-      display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 16px;
+      background: var(--white); border-radius: 24px; padding: 8px;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
     }
-    .logos { display: flex; align-items: center; gap: 16px; justify-self: center; }
-    .logo-atb { display: flex; align-items: center; text-decoration: none; }
-    .logo-atb img { height: 30px; width: auto; display: block; }
-    .vsep { width: 1px; height: 28px; background: var(--g200); flex-shrink: 0; }
-    .logo-p2 { display: flex; align-items: center; gap: 10px; }
-    .logo-p2 .mark {
-      width: 36px; height: 36px; background: var(--lblue); border-radius: 9px;
-      display: flex; align-items: center; justify-content: center;
-      color: var(--blue); font-weight: 800; font-size: 12px; flex-shrink: 0;
+    .logo-yours { display: flex; align-items: center; text-decoration: none; }
+    .kg-logo { height: 38px; width: auto; display: block; }
+    .nav-links { display: flex; align-items: center; gap: 24px; }
+    .nav-link {
+      font-size: 16px; font-weight: 500; line-height: 24px; color: var(--text);
+      text-decoration: none; white-space: nowrap; transition: color .18s;
     }
-    .logo-p2 .wm { font-size: 15px; font-weight: 600; color: var(--g600); }
-    .lang-wrap { justify-self: end; position: relative; }
+    .nav-link:hover { color: var(--green); }
+    .lang-wrap { position: relative; }
     .lang-btn {
-      display: flex; align-items: center; gap: 6px;
-      background: rgba(255,255,255,.6); border: 1px solid var(--g200);
-      border-radius: 10px; padding: 7px 13px;
-      font-size: 13px; font-weight: 600; color: #3C1053;
-      cursor: pointer; transition: all .2s; white-space: nowrap;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      height: 44px; min-width: 80px; padding: 0 14px;
+      background: var(--white); border: 1px solid var(--soft); border-radius: 32px;
+      font-size: 14px; font-weight: 500; color: var(--text);
+      cursor: pointer; transition: background .2s; white-space: nowrap;
     }
-    .lang-btn:hover { border-color: var(--navy); background: var(--white); }
-    .lang-btn svg { width: 15px; height: 15px; color: var(--navy); flex-shrink: 0; }
-    .lang-chevron { width: 10px; height: 10px; color: var(--navy); transition: transform .2s; flex-shrink: 0; }
+    .lang-btn:hover { background: var(--soft2); }
+    .lang-btn svg { width: 20px; height: 20px; color: var(--text); flex-shrink: 0; }
+    .lang-chevron { width: 10px !important; height: 10px !important; transition: transform .2s; }
     .lang-wrap.open .lang-chevron { transform: rotate(180deg); }
     .lang-dropdown {
       display: none; position: absolute; top: calc(100% + 8px); right: 0;
-      background: var(--white); border: 1px solid var(--g200);
-      border-radius: var(--r); box-shadow: var(--sh2); overflow: hidden; min-width: 170px; z-index: 400;
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,.1); overflow: hidden; min-width: 170px; z-index: 400;
     }
     .lang-wrap.open .lang-dropdown { display: block; }
     .lang-opt {
       display: flex; align-items: center; gap: 10px; width: 100%; padding: 11px 16px;
-      background: none; border: none; font-size: 13px; cursor: pointer;
-      transition: background .15s; text-align: left; color: var(--g800);
+      background: none; border: none; font-size: 14px; font-weight: 500; cursor: pointer;
+      transition: background .15s; text-align: left; color: var(--text);
     }
-    .lang-opt:hover { background: var(--g100); }
-    .lang-opt.active { color: var(--navy); font-weight: 700; }
+    .lang-opt:hover { background: var(--soft); }
+    .lang-opt.active { color: var(--green); }
     .lang-opt .flag { font-size: 16px; }
-    .lang-opt .check { margin-left: auto; color: var(--blue); display: none; }
+    .lang-opt .check { margin-left: auto; color: var(--green); display: none; }
     .lang-opt.active .check { display: inline; }
 
-    /* ── TAB BAR (underline) ── */
-    .tab-bar { display: flex; align-items: flex-end; gap: 0; }
-    .tab-item {
-      display: flex; align-items: center; gap: 7px;
-      padding: 11px 18px 12px; font-size: 13.5px; font-weight: 600;
-      color: var(--g400); background: none; border: none;
-      border-bottom: 2px solid transparent;
-      cursor: pointer; transition: color .18s, border-color .18s;
-      white-space: nowrap;
+    /* ── HERO (kendeget banner) ── */
+    .hero-outer { padding: 8px 8px 0; }
+    .hero {
+      position: relative; overflow: hidden;
+      min-height: 440px; border-radius: 16px;
+      background: #1d3b2f url("hero.png") center / cover no-repeat;
+      display: flex; align-items: center; padding: 90px 16px 120px;
     }
-    .tab-item:hover { color: var(--g800); }
-    .tab-item.active { color: #3C1053; border-bottom-color: #3C1053; }
-    .tab-item svg { width: 15px; height: 15px; flex-shrink: 0; }
+    .hero::before {
+      content: ""; position: absolute; inset: 0;
+      background: linear-gradient(90deg, rgba(0,0,0,.45) 0%, rgba(0,0,0,.15) 60%, rgba(0,0,0,0) 100%);
+    }
+    .hero-content { position: relative; display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--lime); color: var(--text); border-radius: 8px;
+      padding: 6px 12px; font-size: 14px; font-weight: 500; line-height: 20px;
+    }
+    .hero-badge svg { width: 18px; height: 18px; }
+    .hero h1 {
+      max-width: 720px; color: #fff; font-weight: 500;
+      font-size: clamp(30px, 4.4vw, 56px); line-height: 1.2; letter-spacing: -.5px;
+    }
 
-    /* ── PAGE HEADER ── */
-    .page-header { background: linear-gradient(160deg, #EDE8F5 0%, var(--bg) 70%); padding: 60px 28px 64px; }
-    .page-header-inner { max-width: 1440px; margin: 0 auto; text-align: center; }
-    .page-header h1 {
-      font-size: clamp(24px, 3vw, 34px); font-weight: 800;
-      color: #3C1053; letter-spacing: -.5px; margin-bottom: 8px;
+    /* ── INTRO CARD (co-branding) ── */
+    .intro-outer { padding: 0 16px; margin-top: -72px; position: relative; z-index: 10; }
+    .intro-card {
+      max-width: 1056px; margin: 0 auto;
+      background: var(--white); border-radius: 32px; box-shadow: var(--sh-card);
+      padding: 32px; display: grid; grid-template-columns: auto 1fr; gap: 40px; align-items: center;
     }
-    .page-header h1 em { font-style: normal; }
-    .page-header p { font-size: 14.5px; color: var(--g600); line-height: 1.7; max-width: 680px; margin: 10px auto 0; }
+    .cobrand { display: flex; flex-direction: column; align-items: flex-start; gap: 20px; }
+    .cobrand-logos { display: flex; align-items: center; gap: 16px; }
+    .cobrand-logos img { display: block; width: auto; }
+    .cobrand-logos .atb { height: 40px; }
+    .cobrand-logos .kg { height: 38px; }
+    .cobrand-x { color: var(--muted); font-size: 18px; font-weight: 500; }
+    .intro-text { font-size: 15px; line-height: 1.7; color: var(--muted2); }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--green); color: #fff; border: none; border-radius: 12px;
+      padding: 12px 20px; font-size: 14px; font-weight: 500; line-height: 20px;
+      cursor: pointer; text-decoration: none; transition: background .18s;
+    }
+    .btn-primary:hover { background: var(--green-d); }
+    .btn-primary svg { width: 16px; height: 16px; flex-shrink: 0; }
 
     /* ── MAIN LAYOUT ── */
+    .main-outer { padding: 56px 16px 80px; }
     .main-layout {
-      max-width: 1440px; margin: 0 auto; padding: 0 28px 72px;
-      display: grid; grid-template-columns: 272px 1fr;
-      gap: 24px; align-items: start;
+      display: grid; grid-template-columns: 280px 1fr;
+      gap: 32px; align-items: start;
     }
-    .sidebar { position: sticky; top: calc(64px + 16px); }
+    .sidebar { position: sticky; top: 16px; }
     .filter-panel {
-      background: var(--white); border: 1px solid var(--g200);
-      border-radius: var(--r); box-shadow: var(--sh);
-      padding: 20px; display: flex; flex-direction: column; gap: 16px;
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: 24px; box-shadow: var(--sh-card);
+      padding: 24px; display: flex; flex-direction: column; gap: 20px;
     }
     .filter-panel-title {
-      font-size: 11px; font-weight: 800; letter-spacing: .8px;
-      text-transform: uppercase; color: var(--g400);
-      padding-bottom: 12px; border-bottom: 1px solid var(--g100);
+      font-size: 20px; font-weight: 500; line-height: 28px; color: var(--text);
     }
-    .filter-group { display: none; flex-direction: column; gap: 16px; }
+    .filter-group { display: none; flex-direction: column; gap: 20px; }
     .filter-group.visible { display: flex; }
 
-    .fg { display: flex; flex-direction: column; gap: 6px; }
+    .fg { display: flex; flex-direction: column; gap: 8px; }
     .fg label {
       display: flex; align-items: center; gap: 6px;
-      font-size: 11px; font-weight: 700; letter-spacing: .6px;
-      text-transform: uppercase; color: var(--g600);
+      font-size: 14px; font-weight: 500; line-height: 20px; color: var(--text);
     }
-    .fg-icon { width: 12px; height: 12px; flex-shrink: 0; color: var(--g600); }
+    .fg-icon { width: 16px; height: 16px; flex-shrink: 0; color: var(--muted); }
     .fg select {
       appearance: none; -webkit-appearance: none;
-      border: 1.5px solid var(--g200); border-radius: var(--rs);
-      padding: 10px 36px 10px 14px; font-size: 13.5px; color: var(--g800); font-weight: 500;
-      background: var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239aa3b8' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 12px center;
-      box-shadow: 0 1px 3px rgba(60,16,83,.05);
+      height: 48px; border: 1px solid var(--border); border-radius: 12px;
+      padding: 0 40px 0 16px; font-size: 14px; color: var(--text); font-weight: 400;
+      background: var(--white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' stroke='%23777E90' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 16px center;
       outline: none; cursor: pointer; transition: border-color .18s, box-shadow .18s; width: 100%;
     }
-    .fg select:hover { border-color: var(--g400); }
-    .fg select:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(123,63,171,.1); }
-
-    .date-btn {
-      display: flex; align-items: center; gap: 8px;
-      border: 1.5px solid var(--g200); border-radius: var(--rs);
-      padding: 10px 14px; font-size: 13.5px; color: var(--g400);
-      background: var(--white); cursor: pointer;
-      transition: border-color .18s, box-shadow .18s;
-      width: 100%; text-align: left; font-weight: 500;
-      box-shadow: 0 1px 3px rgba(60,16,83,.05);
-    }
-    .date-btn:hover { border-color: var(--g400); color: var(--g800); }
-    .date-btn.has-date { border-color: var(--blue); color: var(--navy); font-weight: 600; box-shadow: 0 0 0 3px rgba(123,63,171,.1); }
-    .date-btn svg.cal-icon { width: 14px; height: 14px; flex-shrink: 0; color: var(--g400); }
-    .date-btn.has-date svg.cal-icon { color: var(--blue); }
-    .date-btn .btn-lbl { flex: 1; }
+    .fg select:hover { border-color: #d1d5db; }
+    .fg select:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(3,135,104,.12); }
 
     .btn-reset {
-      border: 1.5px solid var(--navy); background: var(--navy);
-      color: #fff; border-radius: var(--rs);
-      padding: 10px 16px; font-size: 13px; font-weight: 600;
-      cursor: pointer; transition: all .18s; width: 100%;
+      height: 48px; border: 1px solid var(--border); background: var(--white);
+      color: var(--text); border-radius: 12px;
+      padding: 0 16px; font-size: 14px; font-weight: 500;
+      cursor: pointer; transition: background .18s, border-color .18s; width: 100%;
     }
-    .btn-reset:hover { opacity: .85; }
-
-    /* ── CALENDAR ── */
-    .cal-wrap { position: relative; width: 100%; }
-    .cal-popup {
-      display: none; position: absolute; top: calc(100% + 6px); left: 0;
-      z-index: 300; background: var(--white); border: 1px solid var(--g200);
-      border-radius: var(--r); box-shadow: 0 8px 32px rgba(60,16,83,.14);
-      padding: 16px; width: 280px; user-select: none;
-    }
-    .cal-popup.open { display: block; }
-    .cal-step-hint {
-      font-size: 11px; font-weight: 600; padding: 5px 10px;
-      border-radius: 6px; margin-bottom: 12px; text-align: center;
-    }
-    .cal-step-hint.picking-start { background: #F5F5F5; color: #5C1F7A; }
-    .cal-step-hint.picking-end   { background: #E0E0E0; color: #3C1053; }
-    .cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-    .cal-head span { font-size: 14px; font-weight: 700; color: var(--g800); }
-    .cal-nav {
-      background: none; border: none; width: 28px; height: 28px; border-radius: 50%;
-      cursor: pointer; font-size: 17px; color: var(--g600);
-      display: flex; align-items: center; justify-content: center; transition: background .15s;
-    }
-    .cal-nav:hover { background: var(--g100); color: var(--navy); }
-    .cal-wdays { display: grid; grid-template-columns: repeat(7,1fr); margin-bottom: 4px; }
-    .cal-wdays span { text-align: center; font-size: 10px; font-weight: 700; color: var(--g400); padding: 3px 0; }
-    .cal-days { display: grid; grid-template-columns: repeat(7,1fr); gap: 2px; }
-    .cal-day {
-      background: none; border: none; aspect-ratio: 1; border-radius: 50%;
-      font-size: 12.5px; font-weight: 500; color: var(--g800);
-      cursor: pointer; transition: background .15s;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .cal-day:hover:not(.empty) { background: var(--g100); }
-    .cal-day.today { color: var(--blue); font-weight: 700; }
-    .cal-day.range-start { background: var(--navy) !important; color: #fff !important; font-weight: 700; }
-    .cal-day.range-end   { background: var(--navy) !important; color: #fff !important; font-weight: 700; }
-    .cal-day.in-range    { background: #EDE8F5; color: var(--navy); border-radius: 0; }
-    .cal-day.empty { pointer-events: none; }
-    .cal-foot {
-      margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--g100);
-      display: flex; justify-content: space-between; align-items: center;
-    }
-    .cal-foot .sel-lbl { font-size: 12px; color: var(--g600); }
-    .cal-foot .sel-lbl strong { color: var(--navy); }
-    .cal-foot .clr-btn { background: none; border: none; font-size: 12px; color: var(--g400); cursor: pointer; }
-    .cal-foot .clr-btn:hover { color: var(--g800); }
+    .btn-reset:hover { background: var(--soft); border-color: #d1d5db; }
 
     /* ── TOOLBAR ── */
     .main-content { min-width: 0; }
     .toolbar {
-      display: flex; align-items: flex-end; justify-content: space-between;
-      border-bottom: 1px solid var(--g200);
+      display: flex; align-items: center; justify-content: space-between;
       margin-bottom: 24px; gap: 12px;
     }
+    .tab-bar { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tab-item {
+      display: flex; align-items: center; gap: 8px;
+      height: 44px; padding: 0 18px; border-radius: 32px;
+      font-size: 14px; font-weight: 500; color: var(--text);
+      background: var(--soft); border: 1px solid transparent;
+      cursor: pointer; transition: background .18s, color .18s; white-space: nowrap;
+    }
+    .tab-item:hover { background: var(--soft2); }
+    .tab-item.active { background: var(--green); color: #fff; box-shadow: 0 2px 8px rgba(3,135,104,.3); }
+    .tab-item svg { width: 18px; height: 18px; flex-shrink: 0; }
     .view-toggle {
-      display: flex; gap: 3px; background: var(--g100);
-      padding: 4px; border-radius: var(--rs);
+      display: flex; gap: 4px; background: var(--soft);
+      padding: 4px; border-radius: 32px;
     }
     .vbtn {
-      border: none; background: transparent; width: 34px; height: 30px; border-radius: 6px;
+      border: none; background: transparent; width: 36px; height: 36px; border-radius: 50%;
       cursor: pointer; display: flex; align-items: center; justify-content: center;
-      color: var(--g400); transition: all .18s;
+      color: var(--muted); transition: all .18s;
     }
-    .vbtn.active { background: var(--white); color: var(--navy); box-shadow: 0 1px 4px rgba(0,0,0,.1); }
-    .vbtn svg { width: 15px; height: 15px; }
+    .vbtn.active { background: var(--white); color: var(--green); box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+    .vbtn svg { width: 16px; height: 16px; }
 
     /* ── GRID ── */
     #main-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 272px), 1fr));
-      gap: 20px; min-height: 200px;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+      gap: 24px; min-height: 200px;
     }
-    #main-grid.list-view { grid-template-columns: 1fr; }
+    #main-grid.list-view { grid-template-columns: 1fr; gap: 16px; }
 
-    /* ── TOUR CARD ── */
+    /* ── CARD (kendeget HomeCard) ── */
     .tour-card {
-      background: var(--white); border-radius: var(--r); box-shadow: var(--sh);
-      overflow: hidden; transition: transform .22s, box-shadow .22s;
-      display: flex; flex-direction: column; cursor: pointer;
+      background: var(--white); border: 1px solid var(--soft); border-radius: 12px;
+      box-shadow: var(--sh-card); padding: 4px 4px 16px;
+      display: flex; flex-direction: column; gap: 8px;
+      cursor: pointer; transition: box-shadow .2s; text-decoration: none; color: inherit;
     }
-    .tour-card:hover { transform: translateY(-4px); box-shadow: var(--sh2); }
-    .list-view .tour-card { flex-direction: row; }
-    .list-view .tour-card .card-img { width: 220px; min-width: 220px; height: auto; aspect-ratio: auto; align-self: stretch; }
-    /* image is absolute so it doesn't dictate row height — card height comes from the body,
-       keeping cards uniform whether or not an image (avatar) is present */
-    .list-view .tour-card .card-img img { position: absolute; inset: 0; }
-    .list-view .tour-card .card-body { padding: 18px 22px; }
-
-    .card-img { height: 188px; position: relative; overflow: hidden; flex-shrink: 0; }
-    /* grid cards (houses + guides): square 1:1 image */
-    #main-grid:not(.list-view) .card-img { height: auto; aspect-ratio: 1 / 1; }
-    .card-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .4s; }
-    .tour-card:hover .card-img img { transform: scale(1.04); }
-    .card-img-ov {
-      position: absolute; inset: 0;
-      background: linear-gradient(to bottom, rgba(0,0,0,.04) 0%, rgba(0,0,0,.26) 100%);
-      pointer-events: none;
+    .tour-card:hover { box-shadow: var(--sh-card-h); }
+    .card-img {
+      position: relative; overflow: hidden; border-radius: 8px;
+      height: 232px; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--green), #026D54);
     }
-    .card-img.cat-nature     { background: #d1fae5; }
-    .card-img.cat-city       { background: #e0e7ff; }
-    .card-img.cat-historical { background: #EDE0F5; }
-    .card-img.cat-cultural   { background: #fce7f3; }
-    .card-img.cat-adventure  { background: #ffedd5; }
-    .card-img.cat-coastal    { background: #cffafe; }
-    .card-img.type-hotel     { background: #e0e7ff; }
-    .card-img.type-hostel    { background: #d1fae5; }
-    .card-img.type-villa     { background: #fce7f3; }
-    .card-img.type-guesthouse{ background: #EDE0F5; }
-    .card-img.type-resort    { background: #cffafe; }
-    .card-img.type-lodge     { background: #dcfce7; }
-    .card-img.type-camp      { background: #ffedd5; }
-
-    /* Category badge — şəkil üzərində glass */
-    .badge-cat {
-      position: absolute; top: 12px; left: 12px;
-      font-size: 10px; font-weight: 700; letter-spacing: .6px;
-      text-transform: uppercase; padding: 5px 13px; border-radius: 20px;
-      background: rgba(255,255,255,.18);
-      backdrop-filter: blur(20px) saturate(220%);
-      -webkit-backdrop-filter: blur(20px) saturate(220%);
-      border: 1px solid rgba(255,255,255,.55);
-      box-shadow: 0 2px 10px rgba(0,0,0,.2),
-                  inset 0 1px 0 rgba(255,255,255,.65);
-      color: #fff;
-      text-shadow: 0 1px 5px rgba(0,0,0,.6);
+    .card-img.square { height: auto; aspect-ratio: 1 / 1; }
+    .card-img img {
+      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;
+      transition: transform .5s ease-out; z-index: 1;
     }
-
-    /* Price badge — solid, yüksək kontrast, diqqəti çəkir */
-    .badge-price {
-      position: absolute; top: 12px; right: 12px;
-      font-size: 11px; font-weight: 700; padding: 5px 13px; border-radius: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,.22);
+    .tour-card:hover .card-img img { transform: scale(1.1); }
+    .card-img .ph {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,.5);
     }
-    .price-free { background: #FF595A; color: #fff; }
-    .price-paid { background: #FF595A; color: #fff; }
-
-    /* Days badge — dark glass, ikincil məlumat */
-    .badge-days {
-      position: absolute; bottom: 12px; right: 12px;
-      background: rgba(10,12,30,.48);
-      backdrop-filter: blur(12px) saturate(160%);
-      -webkit-backdrop-filter: blur(12px) saturate(160%);
-      border: 1px solid rgba(255,255,255,.18);
-      color: rgba(255,255,255,.92); font-size: 11px; font-weight: 700;
-      padding: 5px 11px; border-radius: 20px;
-      display: flex; align-items: center; gap: 5px;
-    }
-    .badge-days svg { width: 12px; height: 12px; opacity: .8; }
-
-    /* Stars badge — dark glass, sarı ulduz rəngi */
-    .badge-stars {
-      position: absolute; bottom: 12px; right: 12px;
-      background: rgba(10,12,30,.48);
-      backdrop-filter: blur(12px) saturate(160%);
-      -webkit-backdrop-filter: blur(12px) saturate(160%);
-      border: 1px solid rgba(255,255,255,.18);
-      color: #fbbf24; font-size: 12px; font-weight: 700;
-      padding: 5px 11px; border-radius: 20px; letter-spacing: 1px;
-    }
-
-    /* Guide avatar fallback (initials) */
-    .card-img.guide-img { background: linear-gradient(135deg,#7B3FAB,#3C1053); }
+    .card-img .ph svg { width: 64px; height: 64px; }
     .avatar-fallback {
       position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-      font-size: 48px; font-weight: 800; color: #fff; letter-spacing: 1px;
-      background: linear-gradient(135deg,#7B3FAB,#3C1053);
+      font-size: 48px; font-weight: 600; color: rgba(255,255,255,.85); letter-spacing: 1px;
     }
-    .card-img img { position: relative; z-index: 1; }
+
+    /* badges on image */
+    .b-rating {
+      position: absolute; top: 8px; left: 8px; z-index: 2;
+      display: flex; align-items: center; gap: 4px;
+      background: var(--white); border-radius: 999px; padding: 4px 8px;
+      font-size: 12px; font-weight: 500; color: var(--text);
+      box-shadow: 0 1px 2px rgba(0,0,0,.06);
+    }
+    .b-rating svg { width: 14px; height: 14px; }
+    .b-check {
+      position: absolute; top: 8px; left: 8px; z-index: 2;
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--white); color: var(--green); box-shadow: 0 1px 2px rgba(0,0,0,.06);
+    }
+    .b-check.solid { background: var(--green); color: #fff; }
+    .b-check svg { width: 14px; height: 14px; }
+    .b-region {
+      position: absolute; bottom: 8px; left: 8px; z-index: 2;
+      background: var(--white); border-radius: 4px; padding: 2px 6px;
+      font-size: 12px; line-height: 16px; color: var(--text); white-space: nowrap;
+      max-width: calc(100% - 16px); overflow: hidden; text-overflow: ellipsis;
+    }
+
+    .card-body { padding: 0 12px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+    .card-title {
+      font-size: 16px; font-weight: 500; line-height: 24px; color: var(--text);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .card-price { display: flex; align-items: baseline; gap: 4px; }
+    .card-price strong { font-size: 14px; font-weight: 500; line-height: 20px; color: var(--red); }
+    .card-price span { font-size: 12px; line-height: 16px; color: var(--muted); }
+    .meta-row { display: flex; align-items: center; gap: 6px; font-size: 12px; line-height: 16px; color: var(--muted); }
+    .meta-row svg { width: 14px; height: 14px; flex-shrink: 0; }
+    .guide-bio {
+      font-size: 12px; line-height: 18px; color: var(--muted);
+      display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2;
+      -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .guide-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
+    .g-tag {
+      font-size: 12px; font-weight: 500; line-height: 16px;
+      padding: 3px 8px; border-radius: 999px;
+      background: var(--green-l); color: var(--green);
+    }
+
+    /* list view */
+    .list-view .tour-card { flex-direction: row; padding: 4px; gap: 16px; }
+    .list-view .card-img { width: 240px; min-width: 240px; height: 180px; aspect-ratio: auto; }
+    .list-view .card-body { justify-content: center; padding: 12px 12px 12px 0; }
 
     /* Loading / spinner */
     .loading-wrap {
       grid-column: 1/-1; display: flex; flex-direction: column; align-items: center;
-      gap: 16px; padding: 80px 24px; color: var(--g400); font-size: 14px;
+      gap: 16px; padding: 80px 24px; color: var(--muted); font-size: 14px;
     }
     .spinner {
-      width: 42px; height: 42px; border: 4px solid var(--g200);
-      border-top-color: var(--blue); border-radius: 50%; animation: spin .8s linear infinite;
+      width: 40px; height: 40px; border: 4px solid var(--border);
+      border-top-color: var(--green); border-radius: 50%; animation: spin .8s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .card-body { padding: 18px 20px 20px; flex: 1; display: flex; flex-direction: column; }
-    .card-title {
-      font-size: 15px; font-weight: 700; color: #3C1053;
-      margin-bottom: 12px; line-height: 1.42;
-      display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2;
-      -webkit-box-orient: vertical; overflow: hidden;
-    }
-    .card-meta { display: flex; flex-direction: column; gap: 7px; margin-top: auto; }
-    .meta-row { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--g600); }
-    .meta-row svg { width: 14px; height: 14px; flex-shrink: 0; color: var(--g600); }
-    .card-price { font-size: 14px; font-weight: 700; color: #3C1053; margin-top: 4px; }
-    .card-price span { font-size: 11px; font-weight: 500; color: var(--g400); }
-
-    /* ── GUIDE CARD specifics ── */
-    .guide-rating { display: flex; align-items: center; gap: 5px; margin-bottom: 10px; }
-    .stars-txt { color: #f59e0b; font-size: 13px; letter-spacing: 1px; }
-    .rating-num { font-size: 14px; font-weight: 700; color: var(--g800); }
-    .review-cnt { font-size: 12px; color: var(--g400); }
-    .guide-bio {
-      font-size: 12.5px; color: var(--g600); line-height: 1.5; margin-bottom: 10px;
-      display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2;
-      -webkit-box-orient: vertical; overflow: hidden;
-    }
-    .list-view .guide-bio { -webkit-line-clamp: 2; line-clamp: 2; margin-bottom: 0; }
-    .guide-langs { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
-    .lang-tag {
-      font-size: 10px; font-weight: 700; letter-spacing: .4px;
-      padding: 3px 8px; border-radius: 6px;
-      background: var(--lblue); color: var(--blue);
-      border: 1px solid rgba(123,63,171,.25);
-    }
-
-    /* Certified badge */
-    .badge-cert {
-      position: absolute; bottom: 12px; left: 12px;
-      background: rgba(5,150,105,.85);
-      backdrop-filter: blur(12px) saturate(160%);
-      -webkit-backdrop-filter: blur(12px) saturate(160%);
-      border: 1px solid rgba(255,255,255,.35);
-      color: #fff; font-size: 10px; font-weight: 700; letter-spacing: .5px;
-      padding: 4px 10px 4px 7px; border-radius: 20px;
-      display: flex; align-items: center; gap: 5px;
-      text-shadow: 0 1px 4px rgba(0,0,0,.3);
-      box-shadow: 0 2px 8px rgba(0,0,0,.2);
-    }
-    .badge-cert svg { width: 11px; height: 11px; flex-shrink: 0; }
-
-    /* Amenity tags */
-    .amenity-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
-    .amenity-tag {
-      font-size: 11px; font-weight: 500;
-      padding: 3px 9px; border-radius: 6px;
-      background: var(--g100); color: var(--g600);
-      border: 1px solid var(--g200);
-    }
-
-    /* List view — boşluq düzəlişi */
-    .list-view .tour-card .card-body { justify-content: center; gap: 8px; }
-    .list-view .card-title { -webkit-line-clamp: 1; line-clamp: 1; margin-bottom: 0; }
-    .list-view .card-meta { margin-top: 0; }
-    .list-view .guide-rating { margin-bottom: 0; }
-    .list-view .guide-langs { margin-top: 0; }
-    .list-view .amenity-tags { margin-top: 0; }
-
-    /* ── PAGINATION ── */
+    /* ── PAGINATION (kendeget) ── */
     .pagination {
       display: flex; align-items: center; justify-content: center;
-      gap: 6px; margin-top: 32px; flex-wrap: wrap;
+      gap: 8px; margin-top: 32px; flex-wrap: wrap;
     }
     .pg-btn {
-      border: 1.5px solid var(--g200); background: var(--white);
-      color: var(--g600); border-radius: var(--rs); width: 38px; height: 38px;
+      border: 1px solid var(--border); background: var(--white);
+      color: var(--text); border-radius: 12px; width: 40px; height: 40px;
       display: flex; align-items: center; justify-content: center;
       font-size: 14px; font-weight: 500; cursor: pointer; transition: all .18s;
     }
-    .pg-btn:hover:not(:disabled):not(.active) { border-color: var(--navy); color: var(--navy); }
-    .pg-btn.active { background: var(--navy); border-color: var(--navy); color: #fff; font-weight: 700; }
-    .pg-btn:disabled { opacity: .35; cursor: default; }
-    .pg-btn.arrow { font-size: 18px; }
-    .pg-dots { color: var(--g400); font-size: 14px; display: flex; align-items: flex-end; padding-bottom: 4px; }
+    .pg-btn:hover:not(:disabled):not(.active) { background: var(--soft); border-color: #d1d5db; }
+    .pg-btn.active { background: var(--green); border-color: var(--green); color: #fff; box-shadow: 0 2px 8px rgba(3,135,104,.3); }
+    .pg-btn:disabled { opacity: .3; cursor: not-allowed; }
+    .pg-btn.arrow { font-size: 20px; line-height: 1; }
+    .pg-dots { color: var(--muted); font-size: 14px; width: 40px; text-align: center; }
 
     /* ── EMPTY ── */
     .empty { grid-column: 1/-1; text-align: center; padding: 72px 24px; }
-    .empty .ico { font-size: 52px; margin-bottom: 18px; }
-    .empty h3 { font-size: 18px; color: var(--g800); margin-bottom: 8px; }
-    .empty p  { font-size: 14px; color: var(--g400); }
+    .empty .ico { font-size: 48px; margin-bottom: 16px; }
+    .empty h3 { font-size: 18px; font-weight: 500; color: var(--text); margin-bottom: 8px; }
+    .empty p  { font-size: 14px; color: var(--muted); }
 
-    /* ── FOOTER ── */
-    footer {
-      background: var(--white); border-top: 1px solid var(--g200);
-      padding: 24px; text-align: center; font-size: 13px; color: var(--g400);
+    /* ── FOOTER (kendeget) ── */
+    .site-footer {
+      position: relative; overflow: hidden; color: #fff;
+      padding: 64px 40px;
+      background: var(--green-d) url("https://codia-f2c.s3.us-west-1.amazonaws.com/image/2025-11-04/pZXrDnnFZF.png") center / cover no-repeat;
     }
-    footer strong { color: var(--navy); }
-
-    /* ── KENDEGET LOGO ── */
-    .logo-yours { display: flex; align-items: center; text-decoration: none; }
-    .kg-logo { height: 32px; width: auto; display: block; }
-
-    /* ── NAV LINKS ── */
-    .nav-links { display: flex; align-items: center; gap: 2px; justify-content: center; }
-    .nav-link {
-      font-size: 13.5px; font-weight: 500; color: var(--g600);
-      padding: 8px 14px; border-radius: 8px;
-      text-decoration: none; transition: color .18s, background .18s; white-space: nowrap;
+    .site-footer::before {
+      content: ""; position: absolute; left: 0; top: 0; width: 100%; height: 344px;
+      background: url("https://codia-f2c.s3.us-west-1.amazonaws.com/image/2025-11-04/OfPbGoy1Ju.png") center / cover no-repeat;
+      pointer-events: none;
     }
-    .nav-link:hover { color: var(--navy); background: var(--g100); }
-    .nav-link.active { color: var(--navy); font-weight: 600; }
-
-    /* ── HERO LOGOS ── */
-    .hero-logos { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 20px 28px; margin: 36px auto 0; }
-    .hero-logos .logo-atb img { height: 44px; }
-    .hero-logos .vsep { width: 1px; height: 42px; background: var(--g200); }
-    .hero-logos .logo-p2 { display: flex; align-items: center; gap: 12px; }
-    .hero-logos .logo-p2 .mark {
-      width: 46px; height: 46px; background: var(--lblue); border-radius: 11px;
-      display: flex; align-items: center; justify-content: center;
-      color: var(--blue); font-weight: 800; font-size: 13px; flex-shrink: 0;
-    }
-    .hero-logos .logo-p2 .wm { font-size: 17px; font-weight: 600; color: var(--g600); }
-    .hero-more-btn {
-      display: inline-flex; align-items: center; gap: 7px;
-      margin-top: 28px;
-      background: var(--navy); color: #fff;
-      border: none; border-radius: 10px;
-      padding: 11px 24px; font-size: 14px; font-weight: 600;
-      cursor: pointer; text-decoration: none;
-      transition: opacity .18s;
-    }
-    .hero-more-btn:hover { opacity: .82; }
-    .hero-more-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
-
-    /* ── HERO FEATURES ── */
-    .hero-features { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; max-width: 860px; margin: 0 auto; }
-    .hf-card {
-      background: var(--white); border: 1px solid var(--g200);
-      border-radius: 14px; padding: 24px 22px 22px;
-      cursor: pointer; transition: transform .22s, box-shadow .22s;
-      box-shadow: 0 1px 8px rgba(60,16,83,.07);
-    }
-    .hf-card:hover { transform: translateY(-3px); box-shadow: var(--sh2); }
-    .hf-icon-wrap {
-      width: 44px; height: 44px; border-radius: 12px;
-      display: flex; align-items: center; justify-content: center; margin-bottom: 12px;
-    }
-    .hf-icon-wrap.c-blue   { background: #EDE0F5; color: #7B3FAB; }
-    .hf-icon-wrap.c-green  { background: #d1fae5; color: #059669; }
-    .hf-icon-wrap.c-purple { background: #ede9fe; color: #7c3aed; }
-    .hf-icon-wrap svg { width: 22px; height: 22px; }
-    .hf-num { font-size: 26px; font-weight: 800; color: var(--navy); line-height: 1; margin-bottom: 4px; }
-    .hf-title { font-size: 14px; font-weight: 700; color: var(--g800); margin-bottom: 7px; }
-    .hf-desc { font-size: 12.5px; color: var(--g600); line-height: 1.55; }
+    .footer-inner { position: relative; display: flex; flex-direction: column; gap: 32px; }
+    .footer-top { display: flex; gap: 32px; align-items: flex-start; }
+    .footer-brand { flex: 1; display: flex; flex-direction: column; gap: 32px; align-items: flex-start; }
+    .footer-logos { display: flex; align-items: center; gap: 16px; }
+    .footer-logos .f-kg { height: 40px; }
+    .footer-logos .f-atb { height: 40px; filter: brightness(0) invert(1); }
+    .footer-logos .f-sep { width: 1px; height: 32px; background: rgba(255,255,255,.4); }
+    .footer-social { display: flex; gap: 24px; align-items: center; }
+    .footer-social a { width: 24px; height: 24px; display: block; }
+    .footer-social .ico-img { width: 24px; height: 24px; background-size: cover; background-repeat: no-repeat; }
+    .footer-social svg { width: 24px; height: 24px; fill: #fff; }
+    .footer-mail { display: flex; align-items: center; gap: 10px; font-size: 14px; line-height: 20px; color: #fff; text-decoration: none; }
+    .footer-mail:hover span { text-decoration: underline; }
+    .footer-mail svg { width: 20px; height: 20px; }
+    .footer-links { width: 337px; display: flex; flex-direction: column; gap: 16px; }
+    .footer-links a { font-size: 14px; line-height: 20px; color: #fff; text-decoration: none; }
+    .footer-links a:hover { text-decoration: underline; }
+    .footer-copy { display: flex; justify-content: center; align-items: center; gap: 6px; font-size: 14px; line-height: 20px; color: var(--muted); text-align: center; }
+    .footer-copy .cr { width: 20px; height: 20px; background: url("https://codia-f2c.s3.us-west-1.amazonaws.com/image/2025-11-04/TTTyDwo7c2.png") 0 0 / 100% 100% no-repeat; flex-shrink: 0; }
 
     /* ── RESPONSIVE ── */
-    @media (max-width: 960px) {
-      .main-layout { grid-template-columns: 1fr; }
+    @media (max-width: 1024px) {
+      .main-layout { grid-template-columns: 1fr; gap: 24px; }
       .sidebar { position: static; }
-      .filter-panel { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
+      .filter-panel { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; }
       .filter-panel-title { grid-column: 1/-1; }
       .filter-group { display: none; }
       .filter-group.visible { display: contents; }
       .btn-reset-wrap { grid-column: 1/-1; }
+      .intro-card { grid-template-columns: 1fr; gap: 20px; }
     }
     @media (max-width: 768px) {
       .nav-links { display: none; }
+      .hero { min-height: 300px; padding: 48px 16px 96px; }
+      .intro-outer { margin-top: -56px; }
+      .intro-card { padding: 24px 20px; border-radius: 24px; }
+      .main-outer { padding: 40px 16px 56px; }
+      .site-footer { padding: 64px 16px 32px; background-image: url("https://codia-f2c.s3.us-west-1.amazonaws.com/image/2025-11-04/ij7jdUQxFx.png"); }
+      .site-footer::before { height: 450px; background-image: url("https://codia-f2c.s3.us-west-1.amazonaws.com/image/2025-11-04/WCySFZwCL8.png"); }
+      .footer-top { flex-direction: column; }
+      .footer-links { width: 100%; }
     }
     @media (max-width: 600px) {
-      .nav-inner { gap: 8px; padding: 0 16px; }
-      .kg-logo { height: 26px; }
-      .tab-item { padding: 12px 14px; font-size: 13px; }
+      .kg-logo { height: 32px; }
+      .toolbar { align-items: flex-start; }
+      .tab-item { height: 40px; padding: 0 14px; font-size: 13px; }
       .tab-item svg { display: none; }
       .view-toggle { display: none; }
-      .main-layout { padding: 0 16px 48px; }
-      .page-header { padding: 40px 16px 44px; }
-      .hero-logos { gap: 16px 20px; margin-top: 26px; }
-      .hero-logos .logo-atb img { height: 34px; }
-      .hero-logos .vsep { height: 32px; }
-      .list-view .tour-card { flex-direction: column; }
-      .list-view .tour-card .card-img { width: 100%; height: 190px; aspect-ratio: auto; }
+      .cobrand-logos .atb { height: 32px; }
+      .cobrand-logos .kg { height: 30px; }
+      .list-view .tour-card { flex-direction: column; padding: 4px 4px 16px; gap: 8px; }
+      .list-view .card-img { width: 100%; min-width: 0; height: 232px; }
+      .list-view .card-body { padding: 0 12px; }
     }
     @media (max-width: 380px) {
-      .toolbar { flex-wrap: wrap; }
-      .lang-btn { padding: 7px 10px; }
+      .lang-btn { min-width: 0; padding: 0 10px; }
     }
   </style>
 </head>
 <body>
 
 <!-- NAVBAR -->
-<nav id="main-nav">
-  <div class="nav-inner">
+<div class="nav-outer">
+  <nav class="nav-inner wrap" id="main-nav">
     <a class="logo-yours" href="https://kendeget.com" target="_blank" rel="noopener">
       <img src="kedenget-logo.svg" alt="kendeget" class="kg-logo"/>
     </a>
@@ -539,7 +398,6 @@
         <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
           <circle cx="10" cy="10" r="8"/>
           <path d="M10 2c-2 2.5-3 5-3 8s1 5.5 3 8M10 2c2 2.5 3 5 3 8s-1 5.5-3 8M2 10h16"/>
-          <path d="M3 6.5h14M3 13.5h14"/>
         </svg>
         <span id="lang-current">AZ</span>
         <svg class="lang-chevron" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 1l4 4 4-4"/></svg>
@@ -549,30 +407,43 @@
         <button class="lang-opt" data-lang="EN"><span class="flag">🇬🇧</span> English <span class="check">✓</span></button>
       </div>
     </div>
-  </div>
-</nav>
+  </nav>
+</div>
 
-<!-- PAGE HEADER -->
-<div class="page-header">
-  <div class="page-header-inner">
-    <h1 id="hero-title"></h1>
-    <p id="hero-sub"></p>
-
-    <!-- Partnership logos -->
-    <div class="hero-logos">
-      <a class="logo-atb" href="#"><img src="atb-logo.svg" alt="ATB"/></a>
-      <div class="vsep"></div>
-      <a class="logo-atb" href="https://kendeget.com" target="_blank" rel="noopener"><img src="kedenget-logo.svg" alt="kendeget"/></a>
+<!-- HERO -->
+<div class="hero-outer">
+  <section class="hero">
+    <div class="hero-content wrap">
+      <span class="hero-badge">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 10l2 2 4-4"/><circle cx="10" cy="10" r="7.5"/></svg>
+        <span data-i18n="heroBadge">Rəsmi tərəfdaş</span>
+      </span>
+      <h1 id="hero-title"></h1>
     </div>
-    <a class="hero-more-btn" href="https://www.tourismboard.az/az/page/1743-terefdas-inteqrasiya-proqrami" target="_blank" rel="noopener">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M10 3h3v3M13 3L8 8M6 4H3.5A1.5 1.5 0 002 5.5v7A1.5 1.5 0 003.5 14h7A1.5 1.5 0 0012 12.5V10"/></svg>
-      <span data-i18n="moreInfo">Ətraflı məlumat</span>
-    </a>
+  </section>
+</div>
+
+<!-- INTRO (co-branding) -->
+<div class="intro-outer">
+  <div class="intro-card">
+    <div class="cobrand">
+      <div class="cobrand-logos">
+        <img class="atb" src="atb-logo.svg" alt="Azerbaijan Tourism Board"/>
+        <span class="cobrand-x">×</span>
+        <a href="https://kendeget.com" target="_blank" rel="noopener"><img class="kg" src="kedenget-logo.svg" alt="kendeget"/></a>
+      </div>
+      <a class="btn-primary" href="https://www.tourismboard.az/az/page/1743-terefdas-inteqrasiya-proqrami" target="_blank" rel="noopener">
+        <span data-i18n="moreInfo">Ətraflı məlumat</span>
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M10 3h3v3M13 3L8 8M6 4H3.5A1.5 1.5 0 002 5.5v7A1.5 1.5 0 003.5 14h7A1.5 1.5 0 0012 12.5V10"/></svg>
+      </a>
+    </div>
+    <p class="intro-text" id="hero-sub"></p>
   </div>
 </div>
 
 <!-- MAIN LAYOUT -->
-<div class="main-layout">
+<div class="main-outer">
+<div class="main-layout wrap">
 
   <!-- SIDEBAR -->
   <aside class="sidebar">
@@ -677,7 +548,6 @@
   <!-- MAIN CONTENT -->
   <main class="main-content">
     <div class="toolbar">
-      <!-- Underline tabs -->
       <div class="tab-bar">
         <button class="tab-item active" data-section="houses">
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6">
@@ -722,8 +592,40 @@
   </main>
 
 </div>
+</div>
 
-<footer>&copy; 2026 <strong>ATB Partners</strong> &amp; <strong>kendeget</strong></footer>
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-inner wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logos">
+          <a href="https://kendeget.com" target="_blank" rel="noopener"><img class="f-kg" src="footer-logo.svg" alt="kendeget"/></a>
+          <span class="f-sep"></span>
+          <img class="f-atb" src="atb-logo.svg" alt="Azerbaijan Tourism Board"/>
+        </div>
+        <div class="footer-social">
+          <a href="https://www.facebook.com/profile.php?id=61550767204066" target="_blank" rel="noopener" aria-label="Facebook"><div class="ico-img" style="background-image:url('https://codia-f2c.s3.us-west-1.amazonaws.com/image/2025-11-04/h37fjTJPpw.png')"></div></a>
+          <a href="https://www.instagram.com/kendegetcom" target="_blank" rel="noopener" aria-label="Instagram"><div class="ico-img" style="background-image:url('https://codia-f2c.s3.us-west-1.amazonaws.com/image/2025-11-04/yxt2en9DcC.png')"></div></a>
+          <a href="https://wa.me/994513001318" target="_blank" rel="noopener" aria-label="WhatsApp">
+            <svg viewBox="0 0 32 32"><path d="M26.576 5.363c-2.69-2.69-6.406-4.354-10.511-4.354-8.209 0-14.865 6.655-14.865 14.865 0 2.732.737 5.291 2.022 7.491l-.038-.07-2.109 7.702 7.879-2.067c2.051 1.139 4.498 1.809 7.102 1.809h.006c8.209-.003 14.862-6.659 14.862-14.868 0-4.103-1.662-7.817-4.349-10.507zM16.062 28.228h-.005c-2.319 0-4.489-.64-6.342-1.753l.056.031-.451-.267-4.675 1.227 1.247-4.559-.294-.467c-1.185-1.862-1.889-4.131-1.889-6.565 0-6.822 5.531-12.353 12.353-12.353s12.353 5.531 12.353 12.353c0 6.822-5.53 12.353-12.353 12.353zM22.838 18.977c-.371-.186-2.197-1.083-2.537-1.208-.341-.124-.589-.185-.837.187-.246.371-.958 1.207-1.175 1.455-.216.249-.434.279-.805.094-1.15-.466-2.138-1.087-2.997-1.852.01.009c-.799-.74-1.484-1.587-2.037-2.521l-.028-.052c-.216-.371-.023-.572.162-.757.167-.166.372-.434.557-.65.146-.179.271-.384.366-.604l.006-.017c.043-.087.068-.188.068-.296 0-.131-.037-.253-.101-.357.002.003c-.094-.186-.836-2.014-1.145-2.758-.302-.724-.609-.625-.836-.637-.216-.01-.464-.012-.712-.012-.395.01-.746.188-.988.463l-.001.002c-.802.761-1.3 1.834-1.3 3.023 0 .026 0 .053.001.079.131 1.467.681 2.784 1.527 3.857l-.012-.015c1.604 2.379 3.742 4.282 6.251 5.564l.094.043c.548.248 1.25.513 1.968.74l.149.041c.442.14.951.221 1.479.221.303 0 .601-.027.889-.078l-.031.004c1.069-.223 1.956-.868 2.497-1.749l.009-.017c.165-.366.261-.793.261-1.242 0-.185-.016-.366-.047-.542l.003.019c-.092-.155-.34-.247-.712-.434z"/></svg>
+          </a>
+        </div>
+        <a class="footer-mail" href="mailto:infokendeget@gmail.com">
+          <svg viewBox="0 0 20 20" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.167 17.083H5.833c-2.5 0-4.166-1.25-4.166-4.166V7.083c0-2.916 1.666-4.166 4.166-4.166h8.334c2.5 0 4.166 1.25 4.166 4.166v5.834c0 2.916-1.666 4.166-4.166 4.166z"/><path d="M14.167 7.5l-2.609 2.083c-.858.684-2.266.684-3.125 0L5.833 7.5"/></svg>
+          <span>infokendeget@gmail.com</span>
+        </a>
+      </div>
+      <div class="footer-links">
+        <a href="https://kendeget.com/about" target="_blank" rel="noopener" data-i18n="navAbout">Haqqımızda</a>
+        <a href="https://kendeget.com/tour-guides" target="_blank" rel="noopener" data-i18n="navGuides">Bələdçilər</a>
+        <a href="https://kendeget.com/rental-homes" target="_blank" rel="noopener" data-i18n="navHouses">Evlər</a>
+        <a href="https://kendeget.com/privacy-policy" target="_blank" rel="noopener" data-i18n="navPrivacy">Gizlilik şərtləri</a>
+      </div>
+    </div>
+    <div class="footer-copy"><span class="cr"></span><span data-i18n="copyright">2026. Kendeget × Azerbaijan Tourism Board</span></div>
+  </div>
+</footer>
 
 <script>
 /* ── i18n ── */
@@ -752,6 +654,7 @@ const T = {
     certified: 'Sertifikatlı',
     navAbout: 'Haqqımızda', navHouses: 'Evlər', navGuides: 'Bələdçilər', navBlogs: 'Bloglar',
     filtersTitle: 'Filterlər', moreInfo: 'Ətraflı məlumat',
+    heroBadge: 'Azerbaijan.travel rəsmi tərəfdaşı', navPrivacy: 'Gizlilik şərtləri', copyright: '2026. Kendeget × Azerbaijan Tourism Board',
     loading: 'Yüklənir…', loadError: 'Məlumat yüklənmədi',
     noCapacity: 'Adam sayı qeyd edilməyib', maxPrefix: 'maks.',
     unitHouse: 'ev', unitHouses: 'ev', unitTour: 'tur', unitTours: 'tur',
@@ -782,6 +685,7 @@ const T = {
     certified: 'Certified',
     navAbout: 'About', navHouses: 'Houses', navGuides: 'Guides', navBlogs: 'Blog',
     filtersTitle: 'Filters', moreInfo: 'Learn more',
+    heroBadge: 'Official Azerbaijan.travel partner', navPrivacy: 'Privacy Policy', copyright: '2026. Kendeget × Azerbaijan Tourism Board',
     loading: 'Loading…', loadError: 'Could not load data',
     noCapacity: 'Capacity not specified', maxPrefix: 'max',
     unitHouse: 'house', unitHouses: 'houses', unitTour: 'tour', unitTours: 'tours',
@@ -835,7 +739,8 @@ const IC = {
   pin:`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6.2c0 3.8 4.5 8.3 4.5 8.3s4.5-4.5 4.5-8.3C12.5 3.5 10.5 1.5 8 1.5z"/><circle cx="8" cy="6" r="1.6"/></svg>`,
   ppl:`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="5" r="3"/><path d="M2.5 14c0-3 2.5-5.5 5.5-5.5s5.5 2.5 5.5 5.5"/></svg>`,
   home:`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 7l6-5 6 5"/><path d="M3.5 6.5V14h9V6.5"/></svg>`,
-  star:`<svg viewBox="0 0 16 16" fill="#fbbf24" stroke="#fbbf24" stroke-width="1"><path d="M8 1l1.8 3.6L14 5.6l-3 2.9.7 4.1L8 10.5l-3.7 2.1.7-4.1-3-2.9 4.2-.6z"/></svg>`,
+  star:`<svg viewBox="0 0 16 16" fill="#B3FF1F"><path d="M8 1l1.8 3.6L14 5.6l-3 2.9.7 4.1L8 10.5l-3.7 2.1.7-4.1-3-2.9 4.2-.6z"/></svg>`,
+  check:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.75l6 6 9-13.5"/></svg>`,
 };
 
 /* ── FETCH & BUILD ── */
@@ -980,87 +885,77 @@ function getFiltered(){
 const grid  = document.getElementById('main-grid');
 const pagEl = document.getElementById('pagination');
 
+function cardImg(src, alt){
+  return src
+    ? `<img src="${esc(src)}" alt="${esc(alt)}" loading="lazy" onerror="this.style.display='none'"/>`
+    : '';
+}
+const PH_HOME = `<div class="ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg></div>`;
+
+/* kendeget card badge: rating pill if rated, otherwise check circle */
+function topBadge(rating, solid){
+  return rating > 0
+    ? `<span class="b-rating">${IC.star}${rating.toFixed(1)}</span>`
+    : `<span class="b-check${solid?' solid':''}">${IC.check}</span>`;
+}
+
 function houseCard(h){
   const priceVal = (lang==='EN' && h.priceUsd) ? `$${h.priceUsd}` : `₼${h.price}`;
-  const img = h.image
-    ? `<img src="${esc(h.image)}" alt="${esc(h.title)}" loading="lazy" onerror="this.style.display='none'"/>`
-    : '';
-  const last = h.rating>0
-    ? `<div class="meta-row">${IC.star} ${h.rating.toFixed(1)} <span style="color:var(--g400)">(${h.reviewCount} ${t().reviews})</span></div>`
-    : (h.host ? `<div class="meta-row">${IC.ppl} ${esc(h.host)}</div>` : '');
+  const cap = h.capacity ? `${t().maxPrefix} ${h.capacity} ${t().person}` : t().noCapacity;
   return `
-    <div class="tour-card" onclick="window.open('https://kendeget.com/home/${h.id}','_blank','noopener')">
-      <div class="card-img type-villa">
-        ${img}
-        <div class="card-img-ov"></div>
-        ${h.region ? `<span class="badge-cat">${esc(h.region)}</span>` : ''}
-        <span class="badge-price price-paid">${priceVal}<span style="font-weight:500;opacity:.9">${t().perNight}</span></span>
-        ${h.capacity ? `<span class="badge-days">${IC.ppl} ${h.capacity} ${t().person}</span>` : ''}
+    <a class="tour-card" href="https://kendeget.com/home/${h.id}" target="_blank" rel="noopener">
+      <div class="card-img">
+        ${PH_HOME}
+        ${cardImg(h.image, h.title)}
+        ${topBadge(h.rating)}
+        ${h.region ? `<span class="b-region">${esc(h.region)}</span>` : ''}
       </div>
       <div class="card-body">
         <div class="card-title">${esc(h.title)}</div>
-        <div class="card-meta">
-          ${h.region ? `<div class="meta-row">${IC.pin} ${esc(h.region)}</div>` : ''}
-          <div class="meta-row">${IC.ppl} ${h.capacity ? `${t().maxPrefix} ${h.capacity} ${t().person}` : t().noCapacity}</div>
-          ${last}
-          ${h.price ? `<div class="card-price">${priceVal}<span>${t().perNight}</span></div>` : ''}
-        </div>
+        ${h.price ? `<div class="card-price"><strong>${priceVal}</strong><span>${t().perNight}</span></div>` : ''}
+        <div class="meta-row">${IC.ppl} ${cap}</div>
       </div>
-    </div>`;
+    </a>`;
 }
 
 function hotelCard(h){
-  const priceVal = h.startingPrice ? `${t().startingFrom} ₼${h.startingPrice}` : '';
-  const img = h.image
-    ? `<img src="${esc(h.image)}" alt="${esc(h.title)}" loading="lazy" onerror="this.style.display='none'"/>`
-    : '';
   return `
-    <div class="tour-card" onclick="window.open('https://kendeget.com/hotel/${h.id}','_blank','noopener')">
-      <div class="card-img type-villa">
-        ${img}
-        <div class="card-img-ov"></div>
-        ${h.region ? `<span class="badge-cat">${esc(h.region)}</span>` : ''}
-        ${priceVal ? `<span class="badge-price price-paid">${priceVal}</span>` : ''}
+    <a class="tour-card" href="https://kendeget.com/hotel/${h.id}" target="_blank" rel="noopener">
+      <div class="card-img">
+        ${PH_HOME}
+        ${cardImg(h.image, h.title)}
+        ${topBadge(0)}
+        ${h.region ? `<span class="b-region">${esc(h.region)}</span>` : ''}
       </div>
       <div class="card-body">
         <div class="card-title">${esc(h.title)}</div>
-        <div class="card-meta">
-          ${h.region ? `<div class="meta-row">${IC.pin} ${esc(h.region)}</div>` : ''}
-        </div>
+        ${h.startingPrice ? `<div class="card-price"><strong>₼${h.startingPrice}</strong><span>${t().perNight}</span></div>` : ''}
       </div>
-    </div>`;
+    </a>`;
 }
 
 function guideCard(g){
-  const img = g.avatar
-    ? `<img src="${esc(g.avatar)}" alt="${esc(g.name)}" loading="lazy" onerror="this.style.display='none'"/>`
-    : '';
-  const tags = g.categories.length
-    ? `<div class="guide-langs">${g.categories.map(c=>`<span class="lang-tag">${esc(catLabel(c))}</span>`).join('')}</div>`
-    : '';
   const counts = [];
   if(g.houseCount) counts.push(`${g.houseCount} ${g.houseCount===1?t().unitHouse:t().unitHouses}`);
   if(g.tourCount)  counts.push(`${g.tourCount} ${g.tourCount===1?t().unitTour:t().unitTours}`);
-  const countRow = counts.length ? `<div class="meta-row">${IC.home} ${counts.join(' · ')}</div>` : '';
-  const bioRow = g.bio
-    ? `<div class="guide-bio">${esc(g.bio)}</div>` : '';
+  const tags = g.categories.length
+    ? `<div class="guide-tags">${g.categories.map(c=>`<span class="g-tag">${esc(catLabel(c))}</span>`).join('')}</div>`
+    : '';
   return `
-    <div class="tour-card" onclick="window.open('https://kendeget.com/guide/${g.id}','_blank','noopener')">
-      <div class="card-img guide-img">
+    <a class="tour-card" href="https://kendeget.com/guide/${g.id}" target="_blank" rel="noopener">
+      <div class="card-img square">
         <div class="avatar-fallback">${esc(initialsOf(g.name))}</div>
-        ${img}
-        <div class="card-img-ov"></div>
+        ${cardImg(g.avatar, g.name)}
+        ${topBadge(0, true)}
+        ${g.region ? `<span class="b-region">${esc(g.region)}</span>` : ''}
       </div>
       <div class="card-body">
         <div class="card-title">${esc(g.name)}</div>
-        ${bioRow}
-        <div class="card-meta">
-          ${g.region ? `<div class="meta-row">${IC.pin} ${esc(g.region)}</div>` : ''}
-          ${countRow}
-        </div>
+        ${g.bio ? `<div class="guide-bio">${esc(g.bio)}</div>` : ''}
+        ${counts.length ? `<div class="meta-row">${IC.home} ${counts.join(' · ')}</div>` : ''}
         ${tags}
       </div>
-    </div>`;
+    </a>`;
 }
 
 function renderCards(){
